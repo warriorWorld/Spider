@@ -1,15 +1,18 @@
 package com.harbinger.spider
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.harbinger.spider.adapter.MainAdapter
+import com.harbinger.spider.base.BaseActivity
 import com.harbinger.spider.listener.OnRecycleItemClickListener
+import com.harbinger.spider.toefl.TOEFLActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private val list = arrayOf("TOEFL Read Spider")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +25,13 @@ class MainActivity : AppCompatActivity() {
         adapter.list = list
         adapter.onRecycleItemClickListener = object : OnRecycleItemClickListener {
             override fun onItemClick(position: Int) {
-
+                var intent: Intent? = null
+                when (position) {
+                    0 -> {
+                        intent = Intent(this@MainActivity, TOEFLActivity::class.java)
+                    }
+                }
+                intent?.let { startActivity(it) }
             }
         }
         main_rcv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
