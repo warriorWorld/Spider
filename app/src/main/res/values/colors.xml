@@ -13,4 +13,7 @@
     <color name="divide_line">#e1e1e1</color>
     <color name="main_text_color_gray3">#3312274d</color>
     <color name="main_text_color_gray">#8912274d</color>
+    <color name="error">#F44336</color>
+    <color name="little_success">#FFEB3B</color>
+    <color name="complete_success">#8BC34A</color>
 </resources>

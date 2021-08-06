@@ -13,7 +13,7 @@ import com.harbinger.spider.toefl.TOEFLActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
-    private val list = arrayOf("TOEFL Read Spider")
+    private val list = arrayOf("TOEFL Spider")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
