@@ -93,4 +93,88 @@ class KMFCrawler {
             }
         }.start()
     }
+
+    fun getWriteList(page: Int, resultCallback: (urls: MutableList<String>) -> Unit) {
+        Thread {
+            val doc =
+                Jsoup.connect("https://toefl.kmf.com/write/ets/order/$page/0").timeout(30000)
+                    .get()
+            if (null != doc) {
+                val urls = doc.getElementsByClass("listen-exam-link button-style js-listen-link")
+                    .map { "https://toefl.kmf.com" + it.attr("href") }
+                print("urls:$urls")
+                resultCallback.invoke(urls.toMutableList())
+            }
+        }.start()
+    }
+
+    fun getWriteContent(name: String, url: String, resultCallback: (success: Boolean) -> Unit) {
+        Thread {
+            val doc = Jsoup.connect(url).timeout(30000).get()
+            if (null != doc) {
+                val content = doc.getElementsByClass("sentence-content")
+                    .map { it.html().replace("<br>", "\n") }
+                val contentSb = StringBuilder()
+                content.forEach {
+                    contentSb.append(it)
+                    contentSb.append("\n")
+                }
+                try {
+                    val fw: FileWriter = FileWriter(
+                        FileUtil.getTOEFLWriteDirectory().path + File.separator + name + ".txt",
+                        true
+                    )
+                    fw.write(contentSb.toString())
+                    fw.close()
+
+                    resultCallback.invoke(true)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    resultCallback.invoke(false)
+                }
+            }
+        }.start()
+    }
+
+    fun getSpeekList(page: Int, resultCallback: (urls: MutableList<String>) -> Unit) {
+        Thread {
+            val doc =
+                Jsoup.connect("https://toefl.kmf.com/speak/ets/new-order/$page/0").timeout(30000)
+                    .get()
+            if (null != doc) {
+                val urls = doc.getElementsByClass("listen-exam-link button-style js-listen-link")
+                    .map { "https://toefl.kmf.com" + it.attr("href") }
+                print("urls:$urls")
+                resultCallback.invoke(urls.toMutableList())
+            }
+        }.start()
+    }
+
+    fun getSpeekContent(name: String, url: String, resultCallback: (success: Boolean) -> Unit) {
+        Thread {
+            val doc = Jsoup.connect(url).timeout(30000).get()
+            if (null != doc) {
+                val content = doc.getElementsByClass("sentence-content")
+                    .map { it.html().replace("<br>", "\n") }
+                val contentSb = StringBuilder()
+                content.forEach {
+                    contentSb.append(it)
+                    contentSb.append("\n")
+                }
+                try {
+                    val fw: FileWriter = FileWriter(
+                        FileUtil.getTOEFLSpeekDirectory().path + File.separator + name + ".txt",
+                        true
+                    )
+                    fw.write(contentSb.toString())
+                    fw.close()
+
+                    resultCallback.invoke(true)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    resultCallback.invoke(false)
+                }
+            }
+        }.start()
+    }
 }

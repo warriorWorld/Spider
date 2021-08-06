@@ -42,6 +42,26 @@ public class FileUtil {
         return directory;
     }
 
+    public static File getTOEFLWriteDirectory() {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +
+                "TOEFL" + File.separator + "write" + File.separator;
+        File directory = new File(path);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        return directory;
+    }
+
+    public static File getTOEFLSpeekDirectory() {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +
+                "TOEFL" + File.separator + "speek" + File.separator;
+        File directory = new File(path);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        return directory;
+    }
+
     public static String getWritablePcmName(Context context) {
         return System.currentTimeMillis() + ".pcm";
     }

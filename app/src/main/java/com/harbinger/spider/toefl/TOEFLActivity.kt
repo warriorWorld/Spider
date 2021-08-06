@@ -95,6 +95,66 @@ class TOEFLActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
+    private fun getWriteListByPage() {
+        kmfCrawler.getWriteList(currentPage) {
+            urls = it
+            downloadWrite()
+        }
+    }
+
+    private fun downloadWrite() {
+        runOnUiThread {
+            if (urls.isNullOrEmpty()) {
+                currentPage++
+                if (currentPage > 11) {
+                    //全部完成
+                    return@runOnUiThread
+                }
+                subPosition = 0
+                getWriteListByPage()
+                return@runOnUiThread
+            }
+            subPosition++
+            val url = urls!![0]
+            urls?.removeAt(0)
+            kmfCrawler.getWriteContent("$currentPage-$subPosition", url) {
+                if (it) {
+                    downloadWrite()
+                }
+            }
+        }
+    }
+
+    private fun getSpeekListByPage() {
+        kmfCrawler.getSpeekList(currentPage) {
+            urls = it
+            downloadSpeek()
+        }
+    }
+
+    private fun downloadSpeek() {
+        runOnUiThread {
+            if (urls.isNullOrEmpty()) {
+                currentPage++
+                if (currentPage > 11) {
+                    //全部完成
+                    return@runOnUiThread
+                }
+                subPosition = 0
+                getSpeekListByPage()
+                return@runOnUiThread
+            }
+            subPosition++
+            val url = urls!![0]
+            urls?.removeAt(0)
+            kmfCrawler.getSpeekContent("$currentPage-$subPosition", url) {
+                if (it) {
+                    downloadSpeek()
+                }
+            }
+        }
+    }
+
     @AfterPermissionGranted(0)
     fun onClick(v: View) {
         val perms =
@@ -110,6 +170,14 @@ class TOEFLActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
                 "listen" -> {
                     currentPage = 1
                     getListenListByPage()
+                }
+                "write" -> {
+                    currentPage = 1
+                    getWriteListByPage()
+                }
+                "speek" -> {
+                    currentPage = 1
+                    getSpeekListByPage()
                 }
             }
         } else {
